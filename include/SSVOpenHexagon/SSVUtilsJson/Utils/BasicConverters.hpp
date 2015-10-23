@@ -32,15 +32,17 @@ namespace ssvuj
     template <typename T>
     struct Converter
     {
-        inline static void fromObj(const Obj& mObj, T& mValue,
-            ssvu::EnableIf<ssvu::isEnum<T>()>* = nullptr)
+        template <typename U = T>
+        inline static void fromObj(const Obj& mObj, U& mValue,
+            ssvu::EnableIf<ssvu::isEnum<U>()>* = nullptr)
         {
-            mValue = T(getExtr<ssvu::Underlying<T>>(mObj));
+            mValue = U(getExtr<ssvu::Underlying<U>>(mObj));
         }
-        inline static void toObj(Obj& mObj, const T& mValue,
-            ssvu::EnableIf<ssvu::isEnum<T>()>* = nullptr)
+        template <typename U = T>
+        inline static void toObj(Obj& mObj, const U& mValue,
+            ssvu::EnableIf<ssvu::isEnum<U>()>* = nullptr)
         {
-            arch<ssvu::Underlying<T>>(mObj, ssvu::Underlying<T>(mValue));
+            arch<ssvu::Underlying<U>>(mObj, ssvu::Underlying<U>(mValue));
         }
     };
 
@@ -192,11 +194,11 @@ struct Converter<std::vector<TItem>>
         for(auto i(0u); i < mValue.size(); ++i) arch(mObj, i, mValue[i]);
     }
 };
-template <typename TKey, typename TValue,
-    template <typename, typename, typename...> class TMap>
-struct Converter<TMap<TKey, TValue>>
+template <template <typename, typename, typename...> class TMap,
+    typename TKey, typename TValue, typename... TRest>
+struct Converter<TMap<TKey, TValue, TRest...>>
 {
-    using T = TMap<TKey, TValue>;
+    using T = TMap<TKey, TValue, TRest...>;
     inline static void fromObj(const Obj& mObj, T& mValue)
     {
         for(auto& p : mObj)
