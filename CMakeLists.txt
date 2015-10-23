@@ -13,6 +13,7 @@ SSVCMake_findExtlib(SSVMenuSystem)
 SSVCMake_findExtlib(SSVLuaWrapper)
 SSVCMake_findExtlib(SSVEntitySystem)
 SSVCMake_findExtlib(SSVStart)
+SSVCMake_findExtlib(vrm_pp)
 
 if(WIN32)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wl,--stack,4194304 -fpermissive")
